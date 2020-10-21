@@ -4,17 +4,25 @@ Starting project for a course on Advanced Node @ Udemy
 
 updated @2020-10-20
 
-## Installation
+### Downloading
 
-Go to project root and run
+Clone this repository to your local machine with
+
+```bash
+git clone https://github.com/phyokyawdev/AdvancedNodeStarter.git
+```
+
+### Installation
+
+Change directory to project root and install dependencies with
 
 ```bash
 npm install && cd client && npm install
 ```
 
-## Environment setup
+### Environment setup
 
-Create .env file in project root and add following.
+Create .env file in your project root and add following enviroment variables
 
 ```
 GOOGLE_CLIENT_ID = <your-google-client-id>
