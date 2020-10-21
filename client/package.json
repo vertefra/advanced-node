@@ -2,22 +2,16 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": {
-    "/auth/*": {
-      "target": "http://localhost:5000"
-    },
-    "/api/*": {
-      "target": "http://localhost:5000"
-    }
-  },
   "dependencies": {
-    "axios": "^0.16.2",
-    "materialize-css": "^0.100.2",
+    "axios": "^0.20.0",
+    "http-proxy-middleware": "^1.0.6",
+    "materialize-css": "^1.0.0",
+    "object-path": "^0.11.5",
     "react": "^16.0.0-alpha.13",
     "react-dom": "^16.0.0-alpha.13",
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.1.1",
-    "react-scripts": "1.0.10",
+    "react-scripts": "3.4.0",
     "redux": "^3.7.1",
     "redux-form": "^7.0.1",
     "redux-thunk": "^2.2.0"
@@ -27,5 +21,17 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
