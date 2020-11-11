@@ -53,7 +53,7 @@ mongoose.Query.prototype.exec = async function () {
 
 
   // with cache() we set an higher level key that will be used to access lower leve key
-  
+
   const cacheValue = await client.hget(this.hashKey, key)   // REFACTOR -> hget gets the value for nested hashes
 
   if (cacheValue) {
@@ -75,4 +75,10 @@ mongoose.Query.prototype.exec = async function () {
   client.hset(this.hashKey, key, JSON.stringify(res), "EX", 10) // setting Expiration with EX
 
   return res
+}
+
+module.exports = {
+  clearHash(hashKey){
+    client.del(JSON.stringify(hashKey))
+  }
 }
