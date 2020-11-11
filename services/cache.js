@@ -15,7 +15,24 @@ client.get = util.promisify(client.get)
 
 const exec = mongoose.Query.prototype.exec
 
+
+mongoose.Query.prototype.cache = function() {
+  // this represent the value of the query
+  // calling .cache() will set the value of the query itself to true 
+  this.useCache = true
+  return this // returning this will make this function chainable
+}
+
 mongoose.Query.prototype.exec = async function () {
+  
+  // if the value of useChache is fasle (means has not been called useCache()) 
+  // skip all the caching and just execute exec (apply(this, arguments))
+  if(!this.useCache){
+    return exec.apply(this, arguments)
+  }
+
+  // otherwise check for caching
+  
   const key = JSON.stringify({
     ...this.getFilter(),
     collection: this.mongooseCollection.name,
