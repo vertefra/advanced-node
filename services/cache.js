@@ -5,7 +5,7 @@ const util = require('util')
 const redisUrs = 'redis://127.0.0.1:6379'
 const client = redis.createClient(redisUrs)
 
-client.get = util.promisify(client.get)
+client.hget = util.promisify(client.hget)
 
 // storing a copy of exec from query in const exec
 
@@ -16,10 +16,16 @@ client.get = util.promisify(client.get)
 const exec = mongoose.Query.prototype.exec
 
 
-mongoose.Query.prototype.cache = function() {
+mongoose.Query.prototype.cache = function(options={}) {
+
+  // Setting an options object will give you a key where to store all the cache
+  // The key cold be the _id of the user or whatever to identify 
+  // nested queries related to that key
+
   // this represent the value of the query
   // calling .cache() will set the value of the query itself to true 
   this.useCache = true
+  this.hashKey = JSON.stringify(options.key || 'key')
   return this // returning this will make this function chainable
 }
 
@@ -45,7 +51,10 @@ mongoose.Query.prototype.exec = async function () {
   // Also, all the results stored in redis are stringify JSON and we need to 
   // Hidrate them when retrieved
 
-  const cacheValue = await client.get(key)
+
+  // with cache() we set an higher level key that will be used to access lower leve key
+  
+  const cacheValue = await client.hget(this.hashKey, key)   // REFACTOR -> hget gets the value for nested hashes
 
   if (cacheValue) {
     // reassign all the property as object to the model creating a new modelDocument
@@ -53,7 +62,7 @@ mongoose.Query.prototype.exec = async function () {
 
   
     // map function will hydrate all the values from the array
-    console.log('cache')
+
     return Array.isArray(doc)
       ? doc.map(d => new this.model(d)) // it's not a simple object but we need to reconvert it to mongoose model
       : new this.model(doc)         
@@ -63,7 +72,7 @@ mongoose.Query.prototype.exec = async function () {
 
   const res = await exec.apply(this, arguments)
 
-  client.set(key, JSON.stringify(res))
+  client.hset(this.hashKey, key, JSON.stringify(res), "EX", 10) // setting Expiration with EX
 
   return res
 }
