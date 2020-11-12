@@ -25,7 +25,7 @@ afterEach(async()=>{
 })
 
 
-test("The header has the correct text", async ()=>{
+test("The header has the correct text", async () =>{
 
 
   // getting the content of the header
@@ -38,4 +38,14 @@ test("The header has the correct text", async ()=>{
   // to the browser. 
 
   expect(text).toEqual('Blogster')
+})
+
+test("Clicking login start auth flow", async () =>{
+  await page.click('.right a')    // '.right is the selected class, a the anchor tag inside the class
+  const url = await page.url()    // returns the url of the current page.
+
+  // if we succesfully clicked on the login button the url's page that we will be redirected to 
+  // should be accounts.google.com
+  
+  expect(url).toMatch(/accounts\.google\.com/)
 })
